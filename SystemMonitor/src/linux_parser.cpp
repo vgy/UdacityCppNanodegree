@@ -124,17 +124,47 @@ long LinuxParser::UpTime() {
 }
 
 // TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0; }
+long LinuxParser::Jiffies() { return UpTime() * Hertz; }
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::ActiveJiffies(int pid) {
+  string line, token;
+  vector<string> values;
+  std::ifstream filestream(LinuxParser::kProcDirectory + to_string(pid) +
+                           LinuxParser::kStatFilename);
+  if (filestream.is_open()) {
+    std::getline(filestream, line);
+    std::istringstream linestream(line);
+    while (linestream >> token) {
+      values.push_back(token);
+    }
+  }
+  long jiffies{0};
+  if (values.size() > 21) {
+    long user = stol(values[13]);
+    long kernel = stol(values[14]);
+    long children_user = stol(values[15]);
+    long children_kernel = stol(values[16]);
+    jiffies = user + kernel + children_user + children_kernel;
+  }
+  return jiffies;
+}
 
 // TODO: Read and return the number of active jiffies for the system
-long LinuxParser::ActiveJiffies() { return 0; }
+long LinuxParser::ActiveJiffies() {
+  vector<string> time = CpuUtilization();
+  return (stol(time[CPUStates::kUser_]) + stol(time[CPUStates::kNice_]) +
+          stol(time[CPUStates::kSystem_]) + stol(time[CPUStates::kIRQ_]) +
+          stol(time[CPUStates::kSoftIRQ_]) + stol(time[CPUStates::kSteal_]) +
+          stol(time[CPUStates::kGuest_]) + stol(time[CPUStates::kGuestNice_]));
+}
 
 // TODO: Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() { return 0; }
+long LinuxParser::IdleJiffies() {
+  vector<string> time = CpuUtilization();
+  return (stol(time[CPUStates::kIdle_]) + stol(time[CPUStates::kIOwait_]));
+}
 
 // TODO: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() { 
@@ -270,20 +300,6 @@ long LinuxParser::UpTime(int pid) {
   return upTime;
 }
 
-// TODO: Read and return Sytem up time
-float LinuxParser::SystemUpTime() {
-  std::ifstream stream(kProcDirectory + kUptimeFilename);
-  if (!stream.is_open()) {
-    return 0;
-  }
-  string line;
-  std::getline(stream, line);
-  std::istringstream linestream(line);
-  string uptime{"0"};
-  linestream >> uptime;
-  return stol(uptime);
-}
-
 // TODO: Read and return CPU utilization
 float LinuxParser::CpuUtilization(int pid) { 
   long utime, stime, cutime, cstime, starttime;
@@ -298,9 +314,9 @@ float LinuxParser::CpuUtilization(int pid) {
     starttime = stol(GetToken(line, 22));
   }
   
-  auto uptime = SystemUpTime();
+  auto uptime = UpTime();
   auto totalTime = utime + stime + cutime + cstime;
   auto seconds = uptime - (static_cast<float>(starttime) / Hertz);
-  auto cpuUsage = 100 * ((static_cast<float>(totalTime) / Hertz) / seconds);
+  auto cpuUsage = (static_cast<float>(totalTime) / Hertz) / seconds;
   return cpuUsage;
 }
