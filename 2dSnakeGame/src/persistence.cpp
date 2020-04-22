@@ -4,44 +4,49 @@
 
 #include "Persistence.h"
 
-constexpr char persistencePath[] = "ScorePersistence.txt";
+constexpr char PersistencePath[] = "ScorePersistence.txt";
 
-void Persistence::writeContent(const TopScore &topScore){
+void Persistence::WriteContent(const Player &player){
 
-    std::ofstream fout(persistencePath, std::ios::trunc);  
-    std::string content = topScore.name + "," + std::to_string(topScore.score); 
+    std::ofstream fout(PersistencePath, std::ios::trunc);
 
     if (fout.is_open()) {
-        fout << content << std::endl;
+        fout << player.Print() << std::endl;
         fout.close(); 
     }
 }
     
-TopScore Persistence::readContent(){
+Player Persistence::ReadContent(){
     
     bool valid{false};
     std::string content;
-    std::ifstream myfile (persistencePath);
-    TopScore topScore;
+    std::ifstream my_file (PersistencePath);
 
-    if (myfile.is_open())
+    if (my_file.is_open())
     {
         std::string line;
-        while(getline(myfile,line)){
+        while(getline(my_file,line)){
             std::istringstream ss(line);
+            bool valid = true;
 
             std::string name;
-            if(std::getline(ss, name, ',')) {
-                topScore.name = name;
+            if(!std::getline(ss, name, ',')) {
+                valid = false;
             }
 
             std::string score;
-            if(std::getline(ss, score, ',')) {
-                topScore.score = std::stoi(score);
+            if(!std::getline(ss, score, ',')) {
+                valid = false;
             }
+
+            if (valid)
+            {
+                return Player(PlayerType::top, name, std::stoi(score));
+            }
+
             break;
         }
-        myfile.close();
+        my_file.close();
     }
-    return topScore;
+    return Player(PlayerType::top, "", 0);
 }

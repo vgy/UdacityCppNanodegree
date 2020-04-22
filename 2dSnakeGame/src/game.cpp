@@ -2,11 +2,13 @@
 #include <iostream>
 #include "SDL.h"
 
-Game::Game(std::size_t grid_width, std::size_t grid_height)
+Game::Game(std::size_t grid_width, std::size_t grid_height, Player player, Player top_player)
     : snake(grid_width, grid_height),
       engine(dev()),
       random_w(0, static_cast<int>(grid_width)),
-      random_h(0, static_cast<int>(grid_height)) {
+      random_h(0, static_cast<int>(grid_height)),
+      player_(player),
+      top_player_(top_player) {
   PlaceFood();
 }
 
@@ -36,7 +38,8 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
-      renderer.UpdateWindowTitle(score, frame_count);
+      player_.UpdateScore(score);
+      renderer.UpdateWindowTitle(frame_count, player_, top_player_);
       frame_count = 0;
       title_timestamp = frame_end;
     }
