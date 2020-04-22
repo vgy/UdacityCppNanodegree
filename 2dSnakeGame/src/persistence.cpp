@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "Persistence.h"
+#include "persistence.h"
 
 constexpr char PersistencePath[] = "ScorePersistence.txt";
 
