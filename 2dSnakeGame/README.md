@@ -29,3 +29,29 @@ In this project, you can build your own C++ application or extend this Snake gam
 2. Make a build directory in the top level directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
 4. Run it: `./SnakeGame`.
+
+## New Scope
+The application keeps track of top scorer's details, namely score and name of top scorer. It persists required information in a file and reads it when application is started, to get top scorer's details. If current player's score isn't less than top scorer's score, then current player is set as top scorer and current player's details are persisted.
+
+## Rubric Points
+
+### Loops, Functions, I/O
+
+|Criteria|Description|
+| --- | --- |
+|The project demonstrates an understanding of C++ functions and control structures.| A variety of control structures are used in the project.|
+| The project reads data from a file and process the data, or the program writes data to a file.| The project reads data of top scorer from an external file `ScorePersistence.txt` and writes data to it as part of the necessary operation of the program.|
+
+### Object Oriented Programming
+
+|Criteria|Description|
+| --- | --- |
+|Classes encapsulate behavior.| Classes `Player` and `Persistence` group their appropriate data and functions. Member data that is subject to an invariant is hidden from the user. State is accessed via member functions.|
+|Overloaded functions allow the same function to operate on different parameters.| `Player::Title` function is overloaded with different signatures.|
+
+### Memory Management
+
+|Criteria|Description|
+| --- | --- |
+|The project uses scope / Resource Acquisition Is Initialization (RAII) where appropriate.| By using smart pointers, the project follows `RAII` pattern.|
+| The project uses smart pointers instead of raw pointers.| The project uses `unique_ptr` and `shared_ptr`.|
