@@ -5,14 +5,14 @@
 Game::Game(std::size_t grid_width, std::size_t grid_height, std::shared_ptr<Player> player, std::shared_ptr<Player> top_player)
     : snake(grid_width, grid_height),
       engine(dev()),
-      random_w(0, static_cast<int>(grid_width)),
-      random_h(0, static_cast<int>(grid_height)),
+      random_w(0, static_cast<int>(grid_width) - 1),
+      random_h(0, static_cast<int>(grid_height) - 1),
       player_(player),
       top_player_(top_player) {
   PlaceFood();
 }
 
-void Game::Run(Controller const &controller, Renderer &renderer,
+void Game::Run(std::unique_ptr<Controller> const controller, std::unique_ptr<Renderer> renderer,
                std::size_t target_frame_duration) {
   Uint32 title_timestamp = SDL_GetTicks();
   Uint32 frame_start;
@@ -25,9 +25,9 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
-    controller.HandleInput(running, snake);
+    controller->HandleInput(running, snake);
     Update();
-    renderer.Render(snake, food);
+    renderer->Render(snake, food);
 
     frame_end = SDL_GetTicks();
 
@@ -39,7 +39,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
       player_->UpdateScore(score);
-      renderer.UpdateWindowTitle(frame_count, player_, top_player_);
+      renderer->UpdateWindowTitle(frame_count, player_, top_player_);
       frame_count = 0;
       title_timestamp = frame_end;
     }
