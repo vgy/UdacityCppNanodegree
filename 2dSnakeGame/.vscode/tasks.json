@@ -1,0 +1,31 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "C/C++: g++.exe build active file",
+			"command": "D:\\Programs\\MinGW\\mingw64\\bin\\g++.exe",
+			"args": [
+				"-g",
+				"${workspaceFolder}\\src\\*.cpp",
+				"-I",
+				"F:\\MOOC\\Udacity\\C++ Nanodegree\\SDL\\include",
+				"-L",
+				"F:\\MOOC\\Udacity\\C++ Nanodegree\\SDL\\lib\\win64",
+				 "-lSDL2main", "-lSDL2","-lmingw32",
+				"-o",
+				"${workspaceFolder}\\build\\2dSnakeGame.exe",
+			],
+			"options": {
+				"cwd": "D:\\Programs\\MinGW\\mingw64\\bin"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}
