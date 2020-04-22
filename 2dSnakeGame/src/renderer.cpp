@@ -38,7 +38,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Snake const snake, SDL_Point const &food) {
+void Renderer::Render(Snake const snake, SDL_Point const &food) const {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -75,7 +75,7 @@ void Renderer::Render(Snake const snake, SDL_Point const &food) {
   SDL_RenderPresent(sdl_renderer);
 }
 
-void Renderer::UpdateWindowTitle(int fps, std::shared_ptr<Player> player, std::shared_ptr<Player> top_player) {
+void Renderer::UpdateWindowTitle(int fps, std::shared_ptr<Player> player, std::shared_ptr<Player> top_player) const {
   std::cout << "Shared Pointer Player Count" << player.use_count() << std::endl;
   std::cout << "Shared Pointer Top Player Count" << top_player.use_count() << std::endl;
   std::string title{" FPS: " + std::to_string(fps) + " " + player->Title() + " " + top_player->Title()};

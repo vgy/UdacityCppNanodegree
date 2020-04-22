@@ -12,7 +12,7 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, std::shared_ptr<Play
   PlaceFood();
 }
 
-void Game::Run(std::unique_ptr<Controller> const controller, std::unique_ptr<Renderer> renderer,
+void Game::Run(std::unique_ptr<Controller const> controller, std::unique_ptr<Renderer const> renderer,
                std::size_t target_frame_duration) {
   Uint32 title_timestamp = SDL_GetTicks();
   Uint32 frame_start;

@@ -23,8 +23,8 @@ int main(int argc, char *argv[]) {
   Persistence persistence;
   std::shared_ptr<Player> top_player = std::make_shared<Player>(persistence.ReadContent());
 
-  std::unique_ptr<Renderer> renderer = std::make_unique<Renderer>(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
-  std::unique_ptr<Controller> controller = std::make_unique<Controller>();
+  std::unique_ptr<Renderer const> renderer = std::make_unique<Renderer>(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
+  std::unique_ptr<Controller const> controller = std::make_unique<Controller>();
   Game game(kGridWidth, kGridHeight, player, top_player);
   game.Run(std::move(controller), std::move(renderer), kMsPerFrame);
   std::cout << "Game has terminated successfully!\n";
@@ -32,7 +32,10 @@ int main(int argc, char *argv[]) {
   std::cout << "Score: " << player->GetScore() << "\n";
   std::cout << "Size: " << game.GetSize() << "\n";
   
-  auto player_persist = player->GetScore() >= top_player->GetScore() ? player : top_player;
-  persistence.WriteContent(player_persist);
+  if (player->GetScore() >= top_player->GetScore())
+  {
+    persistence.WriteContent(player);
+  }
+  
   return 0;
 }
