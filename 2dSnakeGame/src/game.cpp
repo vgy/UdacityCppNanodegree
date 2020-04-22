@@ -2,7 +2,7 @@
 #include <iostream>
 #include "SDL.h"
 
-Game::Game(std::size_t grid_width, std::size_t grid_height, Player player, Player top_player)
+Game::Game(std::size_t grid_width, std::size_t grid_height, std::shared_ptr<Player> player, std::shared_ptr<Player> top_player)
     : snake(grid_width, grid_height),
       engine(dev()),
       random_w(0, static_cast<int>(grid_width)),
@@ -38,7 +38,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
-      player_.UpdateScore(score);
+      player_->UpdateScore(score);
       renderer.UpdateWindowTitle(frame_count, player_, top_player_);
       frame_count = 0;
       title_timestamp = frame_end;

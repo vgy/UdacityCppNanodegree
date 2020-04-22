@@ -6,12 +6,12 @@
 
 constexpr char PersistencePath[] = "ScorePersistence.txt";
 
-void Persistence::WriteContent(const Player &player){
+void Persistence::WriteContent(const std::shared_ptr<Player> player){
 
     std::ofstream fout(PersistencePath, std::ios::trunc);
 
     if (fout.is_open()) {
-        fout << player.Print() << std::endl;
+        fout << player->Print() << std::endl;
         fout.close(); 
     }
 }

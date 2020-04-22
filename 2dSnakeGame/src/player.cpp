@@ -19,7 +19,12 @@ std::string Player::Title() const
     if (name_ == "") return "";
     
     auto type = player_type_ == PlayerType::current ? PlayerTitle : TopPlayerTitle;
-    return std::string{std::string(type) + "(Name: " + name_ + " Score: " + std::to_string(score_) + ")"};
+    return Title(type);
+}
+
+std::string Player::Title(std::string prefix) const
+{
+    return std::string{prefix + "(Name: " + name_ + " Score: " + std::to_string(score_) + ")"};
 }
 
 int Player::GetScore()

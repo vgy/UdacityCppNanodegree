@@ -21,6 +21,8 @@ class Player{
         std::string name_{""};
         int score_{0};
         PlayerType player_type_{PlayerType::current};
+        
+        std::string Title(std::string) const;
 };
 
 #endif
